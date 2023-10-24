@@ -6,6 +6,8 @@ import csv
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 #create variables to hold information late on
+winning_candidate=""
+winning_count=0
 candidate_list=[]
 candidate_votes={}
 percent_list=[]
@@ -45,16 +47,46 @@ with open(election_data) as ballot_county_candidate:
         #find percentage
         candidate_percentage=float(votes)/float(total_votes)*100
         
-        #round percentage to 3 decimal places
+        #round percentage to 3 decimal places and add to a list
         rounded_percentage=round(candidate_percentage, 3)
-        
-        #add percentages to a list
         percent_list.append(rounded_percentage)
 
-#Calculate the winner of the election
-
+        #calculate winning vote count and candidate
+        #code courtesy of AskBCS Learning Assistant
+        #determine winning vote count and candidate
+        if (votes > winning_count):
+            winning_count = votes
+            winning_candidate = candidate
+      
 #Print results in terminal
+i=0
 print("Election Results")
 print(f"Total Votes: {total_votes}")
+for can_name,can_votes in candidate_votes.items():
+    print("Candidate Summary")
+    print(can_name)
+    print("Total Candidate Votes:")
+    print(can_votes)
+    print("Percentage of Total Votes:")
+    print(percent_list[i])
+    i=i+1
+print(f"Winner: {winning_candidate}")
 
 #Export a file with results
+#Create, open, and write a text file 
+#code courtesy of https://www.w3schools.com/python/python_file_write.asp
+f=open("PyPoll_Analysis.txt", "a")
+f.write("Election Analysis \n")
+x=0
+f.write(f"Total Votes: {total_votes} \n")
+for can_name,can_votes in candidate_votes.items():
+    f.write("\nCandidate Summary \n")
+    f.write(can_name)
+    f.write("\nTotal Candidate Votes: ")
+    f.write(str(can_votes))
+    f.write("\nPercentage of Total Votes: ")
+    f.write(str(percent_list[x]))
+    x=x+1
+f.write("\nWinner: ")
+f.write(str(winning_candidate))
+f.close()
